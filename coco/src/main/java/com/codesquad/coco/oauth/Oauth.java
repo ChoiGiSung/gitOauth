@@ -18,16 +18,19 @@ public class Oauth {
     private String redirectUri;
     private String accessTokenUri;
     private String authorizeUri;
-    private String getUserInfoUri = "https://api.github.com/user";
+    private String userInfoUri;
     private RestTemplate template = new RestTemplate();
     private String authorizeUrlFormat = "{0}?client_id={1}&redirect_uri={2}";
 
-    public Oauth(String clientId, String clientSecret, String redirectUri, String accessTokenUri, String authorizeUri) {
+
+    public Oauth(String clientId, String clientSecret, String redirectUri, String accessTokenUri,
+                 String authorizeUri, String userInfoUri) {
         this.clientId = clientId;
         this.clientSecret = clientSecret;
         this.redirectUri = redirectUri;
         this.accessTokenUri = accessTokenUri;
         this.authorizeUri = authorizeUri;
+        this.userInfoUri = userInfoUri;
     }
 
     public void requestCode(HttpServletResponse response) throws IOException {
@@ -44,8 +47,7 @@ public class Oauth {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.setBearerAuth(token.getAccessToken());
         HttpEntity<?> userInfo = new HttpEntity<>(headers);
-        return template.exchange(getUserInfoUri,HttpMethod.GET,userInfo, UserInfoDTO.class).getBody();
-
+        return template.exchange(userInfoUri,HttpMethod.GET,userInfo, UserInfoDTO.class).getBody();
     }
 
     private HttpEntity<RequestAccessTokenDTO> createHttpEntity(String code){
@@ -53,4 +55,39 @@ public class Oauth {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         return new HttpEntity<>(new RequestAccessTokenDTO(clientId,clientSecret,redirectUri,code),headers);
     }
+
+    private class RequestAccessTokenDTO {
+
+        private String clientId;
+        private String clientSecret;
+        private String redirectUri;
+        private String code;
+
+        public RequestAccessTokenDTO() {
+        }
+
+        public RequestAccessTokenDTO(String clientId, String clientSecret, String redirectUri, String code) {
+            this.clientId = clientId;
+            this.clientSecret = clientSecret;
+            this.redirectUri = redirectUri;
+            this.code = code;
+        }
+
+        public String getClientId() {
+            return clientId;
+        }
+
+        public String getRedirectUri() {
+            return redirectUri;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getClientSecret() {
+            return clientSecret;
+        }
+    }
+
 }
