@@ -22,7 +22,7 @@ public class JWTUtils {
                 .compact();
     }
 
-    public static void validateJWT(String jwt, String key) throws OverTimeException {
+    public static Jws<Claims> validateJWT(String jwt, String key) throws OverTimeException {
         Jws<Claims> claimsJws;
         String[] tokens = jwt.split(BLANK);
         String tokenType =tokens[0];
@@ -35,6 +35,13 @@ public class JWTUtils {
             // 라이브러리는 예외를 던져 주기만 함
             throw new OverTimeException(jwt);
         }
+        return claimsJws;
     }
+
+    public static Object getInfoFromJWT(String jwt, String key,String wantInfo){
+        Jws<Claims> claimsJws = validateJWT(jwt, key);
+        return claimsJws.getBody().get(wantInfo);
+    }
+
 
 }
