@@ -1,4 +1,4 @@
-package com.codesquad.coco.oauth;
+package com.gitoauth.coco.oauth;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

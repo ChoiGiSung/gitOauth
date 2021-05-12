@@ -1,6 +1,4 @@
-package com.codesquad.coco.JWT;
-
-import io.jsonwebtoken.ExpiredJwtException;
+package com.gitoauth.coco.JWT;
 
 public class OverTimeException extends RuntimeException {
 

@@ -1,5 +1,7 @@
-package com.codesquad.coco.oauth;
+package com.gitoauth.coco.oauth;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -56,6 +58,7 @@ public class Oauth {
         return new HttpEntity<>(new RequestAccessTokenDTO(clientId,clientSecret,redirectUri,code),headers);
     }
 
+    @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
     private class RequestAccessTokenDTO {
 
         private String clientId;
@@ -89,5 +92,4 @@ public class Oauth {
             return clientSecret;
         }
     }
-
 }
