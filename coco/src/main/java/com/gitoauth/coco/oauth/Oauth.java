@@ -40,8 +40,14 @@ public class Oauth {
     }
 
     public AccessToken requestAccessToken(String code){
-        HttpEntity<RequestAccessTokenDTO> httpEntity = createHttpEntity(code);
+        HttpEntity<RequestAccessTokenDTO> httpEntity = createHttpEntityForAccessToken(code);
         return template.exchange(accessTokenUri, HttpMethod.POST,httpEntity,AccessToken.class).getBody();
+    }
+
+    private HttpEntity<RequestAccessTokenDTO> createHttpEntityForAccessToken(String code){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        return new HttpEntity<>(new RequestAccessTokenDTO(clientId,clientSecret,redirectUri,code),headers);
     }
 
     public UserInfoDTO requestUserInfo(AccessToken token){
@@ -52,11 +58,19 @@ public class Oauth {
         return template.exchange(userInfoUri,HttpMethod.GET,userInfo, UserInfoDTO.class).getBody();
     }
 
-    private HttpEntity<RequestAccessTokenDTO> createHttpEntity(String code){
+
+    public AccessToken requestRefreshToken(String refreshToken){
+        HttpEntity<RequestRefreshTokenDTO> httpEntity = createHttpEntityForRefreshToken(refreshToken);
+        return template.exchange(accessTokenUri, HttpMethod.POST,httpEntity,AccessToken.class).getBody();
+    }
+
+    private HttpEntity<RequestRefreshTokenDTO> createHttpEntityForRefreshToken(String refreshToken){
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        return new HttpEntity<>(new RequestAccessTokenDTO(clientId,clientSecret,redirectUri,code),headers);
+        return new HttpEntity<>(new RequestRefreshTokenDTO(clientId,clientSecret,refreshToken),headers);
     }
+
+
 
     @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
     private class RequestAccessTokenDTO {
@@ -90,6 +104,37 @@ public class Oauth {
 
         public String getClientSecret() {
             return clientSecret;
+        }
+    }
+
+    @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+    private class RequestRefreshTokenDTO {
+
+        private String clientId;
+        private String clientSecret;
+        private final String grantType = "refresh_token";
+        private String refreshToken;
+
+        public RequestRefreshTokenDTO(String clientId, String clientSecret, String refreshToken) {
+            this.clientId = clientId;
+            this.clientSecret = clientSecret;
+            this.refreshToken = refreshToken;
+        }
+
+        public String getClientId() {
+            return clientId;
+        }
+
+        public String getClientSecret() {
+            return clientSecret;
+        }
+
+        public String getGrantType() {
+            return grantType;
+        }
+
+        public String getRefreshToken() {
+            return refreshToken;
         }
     }
 }
