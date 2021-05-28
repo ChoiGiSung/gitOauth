@@ -28,7 +28,9 @@ public class JWTUtils {
         String tokenType =tokens[0];
         String realToken =tokens[1];
         try{
-            claimsJws = Jwts.parser().setSigningKey(key).parseClaimsJws(realToken);
+            claimsJws = Jwts.parser()
+                    .setSigningKey(key)
+                    .parseClaimsJws(realToken);
         }catch (ExpiredJwtException e){
             //todo 시간 만료 예외 시 id로 DB에서 긁어와서 다시 요청
             // 예외 발생시 커스텀 예외로 던져주고 그걸 잡아서 처리한다 - > 이건 라이브러리를 사용하는 쪽에서 잡아라
