@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 public class UserInfoDTO {
 
     //DB의 기본키가 아닌 리소스서버의 고유 id
-    private Long id;
+    protected Long id;
 
     public UserInfoDTO() {
     }

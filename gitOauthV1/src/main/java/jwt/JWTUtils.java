@@ -7,8 +7,9 @@ import java.util.Date;
 
 public class JWTUtils {
 
-    private static final long TOKEN_VALID_TIME = 6 * 60 * 60 * 1000L;
+    public static final String HEADER_TYPE = "Authorization";
     private static final String TOKEN_TYPE = "Bearer";
+    private static final long TOKEN_VALID_TIME = 6 * 60 * 60 * 1000L;
     private static final String BLANK = " ";
 
     private JWTUtils() {
