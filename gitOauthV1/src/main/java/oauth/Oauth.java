@@ -6,10 +6,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Collections;
 
+@Component
 public class Oauth {
 
     protected String clientId;
@@ -19,7 +21,12 @@ public class Oauth {
     protected String userInfoUri;
     protected RestTemplate template = new RestTemplate();
 
+    {
+        template.setErrorHandler(new RestTemplateExceptionHandler());
+    }
+
     public Oauth() {
+
     }
 
     public Oauth(String clientId, String clientSecret, String redirectUri, String accessTokenUri, String userInfoUri) {
@@ -75,7 +82,7 @@ public class Oauth {
     }
 
     @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
-    private class RequestAccessTokenDTO {
+    protected class RequestAccessTokenDTO {
 
         private String clientId;
         private String clientSecret;
